@@ -1,0 +1,75 @@
+﻿@model ASP.NET_Core_Client.Models.LeaveValidation
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>LeaveValidation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Action)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Action)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ValidDuration)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ValidDuration)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ManagerId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ManagerId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LeaveApplicationId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LeaveApplicationId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Reason)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Reason)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Duration)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Duration)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Nip)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nip)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="DeleteSend">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
