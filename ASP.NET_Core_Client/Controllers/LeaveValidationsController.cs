@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ASP.NET_Core_Client.Helper;
 using ASP.NET_Core_Client.Models;
+using ASP.NET_Core_Client.Report;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -130,6 +131,19 @@ namespace ASP.NET_Core_Client.Controllers
             }
             TempData["msg"] = "<script>alert('Data successfully deleted!');</script>";
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Report(LeaveValidation leaveValidation)
+        {
+            List<LeaveValidation> leaveValidations = new List<LeaveValidation>();
+            HttpClient clientView = _api.Initial();
+            HttpResponseMessage resView = clientView.GetAsync("LeaveValidations").Result;
+            var resultView = resView.Content.ReadAsStringAsync().Result;
+            leaveValidations = JsonConvert.DeserializeObject<List<LeaveValidation>>(resultView);
+
+            LeaveValsReport leaveValReport = new LeaveValsReport();
+            byte[] abyte = leaveValReport.PrepareReport(leaveValidations);
+            return File(abyte, "application/pdf");
         }
     }
 }

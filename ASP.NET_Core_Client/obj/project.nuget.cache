@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "MbQ5fmK1AsHcX5KsCZ+yeNonxN14LvW8lb8RB1ujgmjJKPuM60qT6wULBFcyjKRQfbs43L83HLoLi3qb/AOU8w==",
+  "dgSpecHash": "vYBHA7mKDtgw/itmLjTIdqSUuSNcpFCfU53Spj6wN6Q4bYTPEpWN19ALoJ4KR2d+K4tBGTwmD1EWNcfV1l1A/A==",
   "success": true,
   "projectFilePath": "D:\\Metrodata Code Camp Online\\git\\ASP.NET_CORE_Exercise\\ASP.NET_Core_Client\\ASP.NET_Core_Client.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\User\\.nuget\\packages\\itextsharp\\5.5.13.1\\itextsharp.5.5.13.1.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnet.webapi.client\\5.2.6\\microsoft.aspnet.webapi.client.5.2.6.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore\\2.1.1\\microsoft.aspnetcore.2.1.1.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.antiforgery\\2.1.1\\microsoft.aspnetcore.antiforgery.2.1.1.nupkg.sha512",
@@ -300,5 +301,16 @@
     "C:\\Users\\User\\.nuget\\packages\\system.xml.xpath\\4.3.0\\system.xml.xpath.4.3.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\system.xml.xpath.xdocument\\4.3.0\\system.xml.xpath.xdocument.4.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'iTextSharp 5.5.13.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v2.1'. This package may not be fully compatible with your project.",
+      "libraryId": "iTextSharp",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.1"
+      ]
+    }
+  ]
 }

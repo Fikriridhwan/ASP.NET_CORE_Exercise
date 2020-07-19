@@ -29,7 +29,6 @@ D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\obj\
 D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\bin\Debug\netcoreapp2.1\ASP.NET_Core_Client.pdb
 D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\bin\Debug\netcoreapp2.1\ASP.NET_Core_Client.Views.dll
 D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\bin\Debug\netcoreapp2.1\ASP.NET_Core_Client.Views.pdb
-D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\obj\Debug\netcoreapp2.1\ASP.NET_Core_Client.csproj.CoreCompileInputs.cache
 D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\obj\Debug\netcoreapp2.1\ASP.NET_Core_Client.Views.pdb
 D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\obj\Debug\netcoreapp2.1\ASP.NET_Core_Client.dll
 D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\obj\Debug\netcoreapp2.1\ASP.NET_Core_Client.pdb
@@ -64,3 +63,4 @@ D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\obj\
 D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\obj\Debug\netcoreapp2.1\Razor\Views\LeaveReports\Create.cshtml.g.cs
 D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\obj\Debug\netcoreapp2.1\Razor\Views\LeaveReports\Edit.cshtml.g.cs
 D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\obj\Debug\netcoreapp2.1\Razor\Views\LeaveReports\Delete.cshtml.g.cs
+D:\Metrodata Code Camp Online\git\ASP.NET_CORE_Exercise\ASP.NET_Core_Client\obj\Debug\netcoreapp2.1\ASP.NET_Core_Client.csproj.CoreCompileInputs.cache

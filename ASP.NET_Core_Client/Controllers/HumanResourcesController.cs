@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ASP.NET_Core_Client.Helper;
 using ASP.NET_Core_Client.Models;
+using ASP.NET_Core_Client.Report;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -94,6 +95,21 @@ namespace ASP.NET_Core_Client.Controllers
             }
             TempData["msg"] = "<script>alert('Data successfully deleted!');</script>";
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Report(Employee employee)
+        {
+            List<HumanResource> humanResources = new List<HumanResource>();
+            HttpClient clientView = _api.Initial();
+            HttpResponseMessage resView = clientView.GetAsync("HumanResources").Result;
+            var resultView = resView.Content.ReadAsStringAsync().Result;
+            humanResources = JsonConvert.DeserializeObject<List<HumanResource>>(resultView);
+            //var list = employees.Select(r => r.Id);
+            //ViewBag.employee = new SelectList(list, "Id");
+
+            HumanResourcesReport humanResourcesReport = new HumanResourcesReport();
+            byte[] abyte = humanResourcesReport.PrepareReport(humanResources);
+            return File(abyte, "application/pdf");
         }
     }
 }
