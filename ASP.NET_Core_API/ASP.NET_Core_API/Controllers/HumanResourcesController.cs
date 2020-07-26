@@ -20,15 +20,15 @@ namespace ASP.NET_Core_API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<HumanResourceVM> GetHumanResource()
+        public async Task<IEnumerable<HumanResourceVM>> GetHumanResource()
         {
-            return _humanResourceRepository.GetAll();
+            return await _humanResourceRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public async Task<IEnumerable<HumanResourceVM>> GetHumanResource(int Id)
+        public HumanResourceVM GetHumanResource(int Id)
         {
-            return await _humanResourceRepository.Get(Id);
+            return _humanResourceRepository.Get(Id);
         }
 
         [HttpPost]

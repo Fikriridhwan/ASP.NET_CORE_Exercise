@@ -12,6 +12,6 @@ namespace ASP.NET_Core_Client.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int Nip { get; set; }
-        public int AnnualLeaveRemaining { get; set; }
+        public int annualLeaveRemaining { get; set; }
     }
 }

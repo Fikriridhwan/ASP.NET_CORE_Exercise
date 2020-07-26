@@ -8,8 +8,8 @@ namespace ASP.NET_Core_API.Repository.Interface
 {
     public interface ILeaveValidationRepository
     {
-        IEnumerable<LeaveValidationVM> GetAll();
-        Task<IEnumerable<LeaveValidationVM>> Get(int Id);
+        Task<IEnumerable<LeaveValidationVM>> GetAll();
+        LeaveValidationVM Get(int Id);
         int Create(LeaveValidationVM leaveValidationVM);
         int Update(LeaveValidationVM leaveValidationVM, int Id);
         int Delete(int Id);

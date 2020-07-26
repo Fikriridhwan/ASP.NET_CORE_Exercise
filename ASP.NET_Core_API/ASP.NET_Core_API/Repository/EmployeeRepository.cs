@@ -43,24 +43,46 @@ namespace ASP.NET_Core_API.Repository
             }
         }
 
-        public async Task<IEnumerable<EmployeeVM>> Get(int Id)
+        public EmployeeVM Get(int Id)
         {
             using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("myConn")))
             {
                 var procName = "SP_Get_Employee";
                 parameters.Add("Id", Id);
-                var getEmployee = await connection.QueryAsync<EmployeeVM>(procName, parameters, commandType: CommandType.StoredProcedure);
+                var getEmployee = connection.Query<EmployeeVM>(procName, parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
                 return getEmployee;
             }
         }
 
-        public IEnumerable<EmployeeVM> GetAll()
+        public async Task<IEnumerable<EmployeeVM>> GetAll()
         {
             using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("myConn")))
             {
                 var procName = "SP_GetAll_Employee";
-                var getAllEmployee = connection.Query<EmployeeVM>(procName, commandType: CommandType.StoredProcedure);
+                var getAllEmployee = await connection.QueryAsync<EmployeeVM>(procName, commandType: CommandType.StoredProcedure);
                 return getAllEmployee;
+            }
+        }
+
+        public int Login(EmployeeVM employeeVM)
+        {
+            using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("myConn")))
+            {
+                var procName = "SP_Login_Employee";
+                SqlCommand com = new SqlCommand(procName, connection);
+                com.CommandType = CommandType.StoredProcedure;
+                com.Parameters.AddWithValue("@Id", employeeVM.Id);
+                com.Parameters.AddWithValue("@Password", employeeVM.Name);
+                SqlParameter Log = new SqlParameter();
+                Log.ParameterName = "@IsValid";
+                Log.SqlDbType = SqlDbType.Bit;
+                Log.Direction = ParameterDirection.Output;
+                com.Parameters.Add(Log);
+                connection.Open();
+                com.ExecuteNonQuery();
+                int result = Convert.ToInt32(Log.Value);
+                connection.Close();
+                return result;
             }
         }
 

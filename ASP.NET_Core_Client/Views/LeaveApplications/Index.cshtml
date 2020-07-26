@@ -1,66 +1,138 @@
-﻿@model IEnumerable<ASP.NET_Core_Client.Models.LeaveApplication>
-
+﻿
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Layout/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<div class="page-wrapper">
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <div class="row"></div>
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <!-- ============================================================== -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Data Export</h4>
+                        <div class="col-md-6 col-4 align-self-center">
+                            <span data-toggle="modal" data-target="#myModal" onclick="ClearScreen();">
+                                <button class="btn pull-left hidden-sm-down btn-success fa fa-plus-square-o" data-placement="right" data-toggle="tooltip" title="insert"></button>
+                            </span>
+                            <!-- ======================== Export Excel ====================================== -->
+                            <a asp-action="Excel" class="btn btn-primary fa fa-file-text-o" data-toggle="tooltip" title="Export Excel"></a>
+                            <!-- ======================== Export Excel ====================================== -->
+                        </div>
+                        <div class="table-responsive m-t-40">
+                            <table id="myTable" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Employee Id</th>
+                                        <th>Employee Name</th>
+                                        <th>Nip</th>
+                                        <th>Reason</th>
+                                        <th>Leave Duration</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <form>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="Id" name="Id" hidden />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="EmployeeOption">Employee</label>
+                                            <select class="form-control" id="EmployeeOption" name="EmployeeOption"></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Reason">Reason:</label>
+                                            <input type="text" class="form-control" id="Reason" placeholder="Enter Reason" name="Reason" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="LeaveDuration">Leave Duration:</label>
+                                            <input type="number" class="form-control" id="LeaveDuration" placeholder="Enter Duration" name="LeaveDuration" min="1" max=""/>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" data-dismiss="modal" id="Save" onclick="Save();">Insert</button>
+                                <button type="button" class="btn btn-warning" data-dismiss="modal" id="Update" onclick="Update();">Update</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End PAge Content -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Container fluid  -->
+    <!-- ============================================================== -->
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>|
-    <a asp-action="Report">Export PDF</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reason)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LeaveDuration)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nip)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmployeeName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmployeeId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reason)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LeaveDuration)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nip)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmployeeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmployeeId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@section Scripts{
+    <!-- jQuery -->
+    <script src="~/gentelella-master/gentelella-master/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/gentelella-master/gentelella-master/vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FastClick -->
+    <script src="~/gentelella-master/gentelella-master/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="~/gentelella-master/gentelella-master/vendors/nprogress/nprogress.js"></script>
+    <!-- Chart.js -->
+    <script src="~/gentelella-master/gentelella-master/vendors/Chart.js/dist/Chart.min.js"></script>
+    <!-- gauge.js -->
+    <script src="~/gentelella-master/gentelella-master/vendors/gauge.js/dist/gauge.min.js"></script>
+    <!-- bootstrap-progressbar -->
+    <script src="~/gentelella-master/gentelella-master/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+    <!-- iCheck -->
+    <script src="~/gentelella-master/gentelella-master/vendors/iCheck/icheck.min.js"></script>
+    <!-- Skycons -->
+    <script src="~/gentelella-master/gentelella-master/vendors/skycons/skycons.js"></script>
+    <!-- Flot -->
+    <script src="~/gentelella-master/gentelella-master/vendors/Flot/jquery.flot.js"></script>
+    <script src="~/gentelella-master/gentelella-master/vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="~/gentelella-master/gentelella-master/vendors/Flot/jquery.flot.time.js"></script>
+    <script src="~/gentelella-master/gentelella-master/vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="~/gentelella-master/gentelella-master/vendors/Flot/jquery.flot.resize.js"></script>
+    <!-- Flot plugins -->
+    <script src="~/gentelella-master/gentelella-master/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="~/gentelella-master/gentelella-master/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="~/gentelella-master/gentelella-master/vendors/flot.curvedlines/curvedLines.js"></script>
+    <!-- DateJS -->
+    <script src="~/gentelella-master/gentelella-master/vendors/DateJS/build/date.js"></script>
+    <!-- JQVMap -->
+    <script src="~/gentelella-master/gentelella-master/vendors/jqvmap/dist/jquery.vmap.js"></script>
+    <script src="~/gentelella-master/gentelella-master/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+    <script src="~/gentelella-master/gentelella-master/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="~/gentelella-master/gentelella-master/vendors/moment/min/moment.min.js"></script>
+    <script src="~/gentelella-master/gentelella-master/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="~/gentelella-master/gentelella-master/build/js/custom.min.js"></script>
+    <script src="~/gentelella-master/gentelella-master/vendors/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/gentelella-master/gentelella-master/build/js/sweetalert2@9.js"></script>
+    <script src="~/Scripts/LeaveApplicationScript.js"></script>
 }
-    </tbody>
-</table>
+
+

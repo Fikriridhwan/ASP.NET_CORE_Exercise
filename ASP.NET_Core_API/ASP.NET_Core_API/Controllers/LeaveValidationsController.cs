@@ -20,15 +20,15 @@ namespace ASP.NET_Core_API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<LeaveValidationVM> GetLeaveValidation()
+        public async Task<IEnumerable<LeaveValidationVM>> GetLeaveValidation()
         {
-            return _leaveValidationRepository.GetAll();
+            return await _leaveValidationRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public async Task<IEnumerable<LeaveValidationVM>> GetLeaveValidations(int Id)
+        public LeaveValidationVM GetLeaveValidations(int Id)
         {
-            return await _leaveValidationRepository.Get(Id);
+            return _leaveValidationRepository.Get(Id);
         }
 
         [HttpPost]

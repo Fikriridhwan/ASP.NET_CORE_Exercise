@@ -8,8 +8,8 @@ namespace ASP.NET_Core_API.Repository.Interface
 {
     public interface ILeaveReportRepository
     {
-        IEnumerable<LeaveReportVM> GetAll();
-        Task<IEnumerable<LeaveReportVM>> Get(int Id);
+        Task<IEnumerable<LeaveReportVM>> GetAll();
+        LeaveReportVM Get(int Id);
         int Create(LeaveReportVM leaveReportVM);
         int Update(LeaveReportVM leaveReportVM, int Id);
         int Delete(int Id);

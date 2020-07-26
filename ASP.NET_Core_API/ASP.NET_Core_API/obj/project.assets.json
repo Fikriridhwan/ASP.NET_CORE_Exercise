@@ -11921,11 +11921,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Metrodata Code Camp Online\\git\\ASP.NET_CORE_Exercise\\ASP.NET_Core_API\\ASP.NET_Core_API\\ASP.NET_Core_API.csproj",
+      "projectUniqueName": "D:\\Metrodata Code Camp Online\\git\\ASP.NET_CORE_Exercise\\ASP.NET_CORE_API\\ASP.NET_Core_API\\ASP.NET_Core_API.csproj",
       "projectName": "ASP.NET_Core_API",
-      "projectPath": "D:\\Metrodata Code Camp Online\\git\\ASP.NET_CORE_Exercise\\ASP.NET_Core_API\\ASP.NET_Core_API\\ASP.NET_Core_API.csproj",
+      "projectPath": "D:\\Metrodata Code Camp Online\\git\\ASP.NET_CORE_Exercise\\ASP.NET_CORE_API\\ASP.NET_Core_API\\ASP.NET_Core_API.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "D:\\Metrodata Code Camp Online\\git\\ASP.NET_CORE_Exercise\\ASP.NET_Core_API\\ASP.NET_Core_API\\obj\\",
+      "outputPath": "D:\\Metrodata Code Camp Online\\git\\ASP.NET_CORE_Exercise\\ASP.NET_CORE_API\\ASP.NET_Core_API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -11940,7 +11940,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "http://api.nuget.org/v3/index.json": {},
+        "https://nuget.telerik.com/nuget": {}
       },
       "frameworks": {
         "netcoreapp2.1": {

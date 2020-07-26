@@ -120,7 +120,7 @@ namespace ASP.NET_Core_Client.Report
                 _pdfPCell.BackgroundColor = BaseColor.WHITE;
                 _pdfTable.AddCell(_pdfPCell);
 
-                _pdfPCell = new PdfPCell(new Phrase(employee.AnnualLeaveRemaining.ToString(), _fontSylye));
+                _pdfPCell = new PdfPCell(new Phrase(employee.annualLeaveRemaining.ToString(), _fontSylye));
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                 _pdfPCell.BackgroundColor = BaseColor.WHITE;

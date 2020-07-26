@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ASP.NET_Core_Client.Helper;
 using ASP.NET_Core_Client.Models;
 using ASP.NET_Core_Client.Report;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -15,116 +18,134 @@ namespace ASP.NET_Core_Client.Controllers
     public class ManagersController : Controller
     {
         HelperApi _api = new HelperApi();
-        public async Task<IActionResult> Index()
+        
+        public IActionResult Index()
         {
-            List<Manager> managers = new List<Manager>();
-            HttpClient client = _api.Initial();
-            HttpResponseMessage res = await client.GetAsync("Managers");
-            var result = res.Content.ReadAsStringAsync().Result;
-            managers = JsonConvert.DeserializeObject<List<Manager>>(result);
-            return View(managers);
-        }
-
-        public async Task<IActionResult> Details(int Id)
-        {
-            var manager = new Manager();
-            HttpClient client = _api.Initial();
-            HttpResponseMessage res = await client.GetAsync("Managers/" + Id.ToString());
-            var result = res.Content.ReadAsStringAsync().Result;
-            manager = JsonConvert.DeserializeObject<Manager>(result.Substring(1, result.Length - 2));
-            return View(manager);
-        }
-
-        public async Task<ActionResult> Create()
-        {
-            List<Employee> employees = new List<Employee>();
-            HttpClient client = _api.Initial();
-            HttpResponseMessage res = await client.GetAsync("Employees");
-            var result = res.Content.ReadAsStringAsync().Result;
-            employees = JsonConvert.DeserializeObject<List<Employee>>(result);
-            var list = employees.Select(r => r.Id);
-            ViewBag.employee = new SelectList(list, "Id");
             return View();
         }
-
-        [HttpPost]
-        public ActionResult Create(Manager manager)
+        
+        public JsonResult LoadManagers()
         {
+            IEnumerable<Manager> managers = null;
             HttpClient client = _api.Initial();
-            HttpResponseMessage res = client.PostAsJsonAsync("Managers", manager).Result;
-            if (res.Content.ReadAsStringAsync().Result == "False")
+            var responseTask = client.GetAsync("Managers");
+            responseTask.Wait();
+
+            var result = responseTask.Result;
+            if (result.IsSuccessStatusCode)
             {
-                return View();
+                var readTask = result.Content.ReadAsAsync<IList<Manager>>();
+                readTask.Wait();
+                managers = readTask.Result;
             }
-            TempData["msg"] = "<script>alert('Saved Successfully!');</script>";
-            return RedirectToAction("Index");
-        }
-
-        public async Task<ActionResult> Edit(int Id)
-        {
-            List<Employee> employees = new List<Employee>();
-            HttpClient clientView = _api.Initial();
-            HttpResponseMessage resView = await clientView.GetAsync("Employees");
-            var resultView = resView.Content.ReadAsStringAsync().Result;
-            employees = JsonConvert.DeserializeObject<List<Employee>>(resultView);
-            var list = employees.Select(r => r.Id);
-            ViewBag.employee = new SelectList(list, "Id");
-
-            var manager = new Manager();
-            HttpClient client = _api.Initial();
-            HttpResponseMessage res = await client.GetAsync("Managers/" + Id.ToString());
-            var result = res.Content.ReadAsStringAsync().Result;
-            manager = JsonConvert.DeserializeObject<Manager>(result.Substring(1, result.Length - 2));
-
-            return View(manager);
-        }
-
-        [HttpPost]
-        public ActionResult Edit(Manager manager, int Id)
-        {
-            HttpClient client = _api.Initial();
-            HttpResponseMessage res = client.PutAsJsonAsync("Managers/" + Id.ToString(), manager).Result;
-            if (res.Content.ReadAsStringAsync().Result == "False")
+            else
             {
-                return View();
+                managers = Enumerable.Empty<Manager>();
+                ModelState.AddModelError(string.Empty, "Server ERror Try after some time.");
             }
-            TempData["msg"] = "<script>alert('Saved Successfully!');</script>";
-            return RedirectToAction("Index");
-        }
-        public async Task<ActionResult> Delete(int Id)
-        {
-            var manager = new Manager();
-            HttpClient client = _api.Initial();
-            HttpResponseMessage res = await client.GetAsync("Managers/" + Id.ToString());
-            var result = res.Content.ReadAsStringAsync().Result;
-            manager = JsonConvert.DeserializeObject<Manager>(result.Substring(1, result.Length - 2));
-            return View(manager);
+            return Json(managers);
         }
 
-        [HttpPost]
-        public ActionResult DeleteSend(int Id)
+        public JsonResult GetById(int Id)
         {
+            Manager manager = null;
             HttpClient client = _api.Initial();
-            HttpResponseMessage res = client.DeleteAsync("Managers/" + Id.ToString()).Result;
-            if (res.Content.ReadAsStringAsync().Result != "True")
+            var responseTask = client.GetAsync("Managers/" + Id);
+            responseTask.Wait();
+
+            var result = responseTask.Result;
+            if (result.IsSuccessStatusCode)
             {
-                TempData["msg"] = "<script>alert('Data failed to deleted!');</script>";
+                var json = JsonConvert.DeserializeObject(result.Content.ReadAsStringAsync().Result).ToString();
+                manager = JsonConvert.DeserializeObject<Manager>(json);
             }
-            TempData["msg"] = "<script>alert('Data successfully deleted!');</script>";
-            return RedirectToAction("Index");
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Server ERror Try after some time.");
+            }
+            return Json(manager);
         }
 
-        public ActionResult Report(Manager manager)
+        public JsonResult InsertUpdate(Manager manager, int Id)
+        {
+            HttpClient client = _api.Initial();
+            var myContent = JsonConvert.SerializeObject(manager);
+            var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+            var byteContent = new ByteArrayContent(buffer);
+            byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            if (manager.Id == 0)
+            {
+                try
+                {
+                    var result = client.PostAsync("Managers", byteContent).Result;
+                    return Json(result);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            else if (manager.Id == Id)
+            {
+                try
+                {
+                    var result = client.PutAsync("Managers/" + Id, byteContent).Result;
+                    return Json(result);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return Json(404);
+        }
+
+        public JsonResult Delete(int id)
+        {
+            HttpClient client = _api.Initial();
+            var result = client.DeleteAsync("Managers/" + id).Result;
+            return Json(result);
+        }
+
+        public async Task<IActionResult> Excel()
         {
             List<Manager> managers = new List<Manager>();
             HttpClient clientView = _api.Initial();
-            HttpResponseMessage resView = clientView.GetAsync("Managers").Result;
+            HttpResponseMessage resView = await clientView.GetAsync("Managers");
             var resultView = resView.Content.ReadAsStringAsync().Result;
             managers = JsonConvert.DeserializeObject<List<Manager>>(resultView);
 
-            ManagersReport managersReport = new ManagersReport();
-            byte[] abyte = managersReport.PrepareReport(managers);
-            return File(abyte, "application/pdf");
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Managers");
+                var currentRow = 1;
+                var number = 0;
+                worksheet.Cell(currentRow, 1).Value = "No";
+                worksheet.Cell(currentRow, 2).Value = "Id";
+                worksheet.Cell(currentRow, 3).Value = "Name";
+                worksheet.Cell(currentRow, 4).Value = "NIP";
+                worksheet.Cell(currentRow, 5).Value = "Division";
+
+                foreach (var man in managers)
+                {
+                    currentRow++;
+                    number++;
+                    worksheet.Cell(currentRow, 1).Value = number;
+                    worksheet.Cell(currentRow, 2).Value = man.Id;
+                    worksheet.Cell(currentRow, 3).Value = man.Name;
+                    worksheet.Cell(currentRow, 4).Value = man.Nip;
+                    worksheet.Cell(currentRow, 5).Value = man.Division;
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var conten = stream.ToArray();
+                    return File(conten, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "Managers_Data.xlsx");
+                }
+            }
         }
     }
 }

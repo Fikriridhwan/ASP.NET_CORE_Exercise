@@ -52,7 +52,14 @@ namespace ASP.NET_Core_API
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "WebRoute",
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" },
+                    constraints: new { id = "[0-9]+" });
+            });
         }
     }
 }

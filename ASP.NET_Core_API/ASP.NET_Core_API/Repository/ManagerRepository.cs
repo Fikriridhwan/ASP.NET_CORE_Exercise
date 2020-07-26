@@ -42,23 +42,23 @@ namespace ASP.NET_Core_API.Repository
             }
         }
 
-        public async Task<IEnumerable<ManagerVM>> Get(int Id)
+        public ManagerVM Get(int Id)
         {
             using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("myConn")))
             {
                 var procName = "SP_Get_Manager";
                 parameters.Add("Id", Id);
-                var getManager = await connection.QueryAsync<ManagerVM>(procName, parameters, commandType: CommandType.StoredProcedure);
+                var getManager =  connection.Query<ManagerVM>(procName, parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
                 return getManager;
             }
         }
 
-        public IEnumerable<ManagerVM> GetAll()
+        public async Task<IEnumerable<ManagerVM>> GetAll()
         {
             using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("myConn")))
             {
                 var procName = "SP_GetAll_Manager";
-                var getAllManager =  connection.Query<ManagerVM>(procName, commandType: CommandType.StoredProcedure);
+                var getAllManager = await connection.QueryAsync<ManagerVM>(procName, commandType: CommandType.StoredProcedure);
                 return getAllManager;
             }
         }

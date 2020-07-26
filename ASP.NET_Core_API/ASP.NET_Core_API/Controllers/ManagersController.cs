@@ -20,15 +20,15 @@ namespace ASP.NET_Core_API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ManagerVM> GetManager()
+        public async Task<IEnumerable<ManagerVM>> GetManager()
         {
-            return _managerRepository.GetAll();
+            return await _managerRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public async Task<IEnumerable<ManagerVM>> GetManagers(int Id)
+        public ManagerVM GetManagers(int Id)
         {
-            return await _managerRepository.Get(Id);
+            return _managerRepository.Get(Id);
         }
 
         [HttpPost]

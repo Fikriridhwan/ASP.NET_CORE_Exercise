@@ -20,15 +20,15 @@ namespace ASP.NET_Core_API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<LeaveApplicationVM> GetLeaveApplication()
+        public async Task<IEnumerable<LeaveApplicationVM>> GetLeaveApplication()
         {
-            return _leaveApplicationRepository.GetAll();
+            return await _leaveApplicationRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public async Task<IEnumerable<LeaveApplicationVM>> GetLeaveApplications(int Id)
+        public LeaveApplicationVM GetLeaveApplications(int Id)
         {
-            return await _leaveApplicationRepository.Get(Id);
+            return _leaveApplicationRepository.Get(Id);
         }
 
         [HttpPost]

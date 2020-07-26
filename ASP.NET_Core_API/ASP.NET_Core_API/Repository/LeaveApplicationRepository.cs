@@ -43,23 +43,23 @@ namespace ASP.NET_Core_API.Repository
             }
         }
 
-        public async Task<IEnumerable<LeaveApplicationVM>> Get(int Id)
+        public LeaveApplicationVM Get(int Id)
         {
             using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("myConn")))
             {
                 var procName = "SP_Get_LeaveApplication";
                 parameters.Add("Id", Id);
-                var getLA = await connection.QueryAsync<LeaveApplicationVM>(procName, parameters, commandType: CommandType.StoredProcedure);
+                var getLA = connection.Query<LeaveApplicationVM>(procName, parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
                 return getLA;
             }
         }
 
-        public IEnumerable<LeaveApplicationVM> GetAll()
+        public async Task<IEnumerable<LeaveApplicationVM>> GetAll()
         {
             using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("myConn")))
             {
                 var procName = "SP_GetAll_LeaveApplication";
-                var getAllHR = connection.Query<LeaveApplicationVM>(procName, commandType: CommandType.StoredProcedure);
+                var getAllHR = await connection.QueryAsync<LeaveApplicationVM>(procName, commandType: CommandType.StoredProcedure);
                 return getAllHR;
             }
         }

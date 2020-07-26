@@ -41,23 +41,23 @@ namespace ASP.NET_Core_API.Repository
             }
         }
 
-        public async Task<IEnumerable<HumanResourceVM>> Get(int Id)
+        public HumanResourceVM Get(int Id)
         {
             using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("myConn")))
             {
                 var procName = "SP_Get_HumanResource";
                 parameters.Add("Id", Id);
-                var getHR = await connection.QueryAsync<HumanResourceVM>(procName, parameters, commandType: CommandType.StoredProcedure);
+                var getHR = connection.Query<HumanResourceVM>(procName, parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
                 return getHR;
             }
         }
 
-        public IEnumerable<HumanResourceVM> GetAll()
+        public async Task<IEnumerable<HumanResourceVM>> GetAll()
         {
             using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("myConn")))
             {
                 var procName = "SP_GetAll_HumanResource";
-                var getAllHR = connection.Query<HumanResourceVM>(procName, commandType: CommandType.StoredProcedure);
+                var getAllHR = await connection.QueryAsync<HumanResourceVM>(procName, commandType: CommandType.StoredProcedure);
                 return getAllHR;
             }
         }

@@ -8,10 +8,11 @@ namespace ASP.NET_Core_API.Repository.Interface
 {
     public interface IEmployeeRepository
     {
-        IEnumerable<EmployeeVM> GetAll();
-        Task<IEnumerable<EmployeeVM>> Get(int Id);
+        Task<IEnumerable<EmployeeVM>> GetAll();
+        EmployeeVM Get(int Id);
         int Create(EmployeeVM employeeVM);
         int Update(EmployeeVM employeeVM, int Id);
         int Delete(int Id);
+        int Login(EmployeeVM employeeVM);
     }
 }

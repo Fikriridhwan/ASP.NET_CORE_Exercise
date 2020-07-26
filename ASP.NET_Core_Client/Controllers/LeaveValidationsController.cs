@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ASP.NET_Core_Client.Helper;
 using ASP.NET_Core_Client.Models;
 using ASP.NET_Core_Client.Report;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -15,135 +18,142 @@ namespace ASP.NET_Core_Client.Controllers
     public class LeaveValidationsController : Controller
     {
         HelperApi _api = new HelperApi();
-        public async Task<IActionResult> Index()
+
+        public IActionResult Index()
         {
-            List<LeaveValidation> leaveValidations = new List<LeaveValidation>();
-            HttpClient client = _api.Initial();
-            HttpResponseMessage res = await client.GetAsync("LeaveValidations");
-            var result = res.Content.ReadAsStringAsync().Result;
-            leaveValidations = JsonConvert.DeserializeObject<List<LeaveValidation>>(result);
-            return View(leaveValidations);
-        }
-
-        public async Task<IActionResult> Details(int Id)
-        {
-            var leaveValidation = new LeaveValidation();
-            HttpClient client = _api.Initial();
-            HttpResponseMessage res = await client.GetAsync("LeaveValidations/" + Id.ToString());
-            var result = res.Content.ReadAsStringAsync().Result;
-            leaveValidation = JsonConvert.DeserializeObject<LeaveValidation>(result.Substring(1, result.Length - 2));
-
-            return View(leaveValidation);
-        }
-
-        public async Task<ActionResult> Create()
-        {
-            List<Manager> managers = new List<Manager>();
-            HttpClient clientM = _api.Initial();
-            HttpResponseMessage resM = await clientM.GetAsync("Managers");
-            var resultM = resM.Content.ReadAsStringAsync().Result;
-            managers = JsonConvert.DeserializeObject<List<Manager>>(resultM);
-            var list1 = managers.Select(r => r.Id);
-            ViewBag.managersId = new SelectList(list1, "Id");
-
-            List<LeaveApplication> LeaveApp = new List<LeaveApplication>();
-            HttpClient clientLA = _api.Initial();
-            HttpResponseMessage resLA = await clientLA.GetAsync("LeaveApplications");
-            var resultLA = resLA.Content.ReadAsStringAsync().Result;
-            LeaveApp = JsonConvert.DeserializeObject<List<LeaveApplication>>(resultLA);
-            var list2 = LeaveApp.Select(r => r.Id);
-            ViewBag.LeaveAppId = new SelectList(list2, "Id");
-
             return View();
         }
-
-        [HttpPost]
-        public ActionResult Create(LeaveValidation leaveValidation)
+        public JsonResult LoadLeaveValidations()
         {
+            IEnumerable<LeaveValidation> leaveValidations = null;
             HttpClient client = _api.Initial();
-            HttpResponseMessage res = client.PostAsJsonAsync("LeaveValidations", leaveValidation).Result;
-            if (res.Content.ReadAsStringAsync().Result == "False")
+            var responseTask = client.GetAsync("LeaveValidations");
+            responseTask.Wait();
+
+            var result = responseTask.Result;
+            if (result.IsSuccessStatusCode)
             {
-                return View();
+                var readTask = result.Content.ReadAsAsync<IList<LeaveValidation>>();
+                readTask.Wait();
+                leaveValidations = readTask.Result;
             }
-            TempData["msg"] = "<script>alert('Saved Successfully!');</script>";
-            return RedirectToAction("Index");
-        }
-
-        public async Task<ActionResult> Edit(int Id)
-        {
-            List<Manager> managers = new List<Manager>();
-            HttpClient clientM = _api.Initial();
-            HttpResponseMessage resM = await clientM.GetAsync("Managers");
-            var resultM = resM.Content.ReadAsStringAsync().Result;
-            managers = JsonConvert.DeserializeObject<List<Manager>>(resultM);
-            var list1 = managers.Select(r => r.Id);
-            ViewBag.managersId = new SelectList(list1, "Id");
-
-            List<LeaveApplication> LeaveApp = new List<LeaveApplication>();
-            HttpClient clientLA = _api.Initial();
-            HttpResponseMessage resLA = await clientLA.GetAsync("LeaveApplications");
-            var resultLA = resLA.Content.ReadAsStringAsync().Result;
-            LeaveApp = JsonConvert.DeserializeObject<List<LeaveApplication>>(resultLA);
-            var list2 = LeaveApp.Select(r => r.Id);
-            ViewBag.LeaveAppId = new SelectList(list2, "Id");
-
-            var leaveValidation = new LeaveValidation();
-            HttpClient client = _api.Initial();
-            HttpResponseMessage res = await client.GetAsync("LeaveValidations/" + Id.ToString());
-            var result = res.Content.ReadAsStringAsync().Result;
-            leaveValidation = JsonConvert.DeserializeObject<LeaveValidation>(result.Substring(1, result.Length - 2));
-
-            return View(leaveValidation);
-        }
-
-        [HttpPost]
-        public ActionResult Edit(LeaveValidation leaveValidation, int Id)
-        {
-            HttpClient client = _api.Initial();
-            HttpResponseMessage res = client.PutAsJsonAsync("LeaveValidations/" + Id.ToString(), leaveValidation).Result;
-            if (res.Content.ReadAsStringAsync().Result == "False")
+            else
             {
-                return View();
+                leaveValidations = Enumerable.Empty<LeaveValidation>();
+                ModelState.AddModelError(string.Empty, "Server ERror Try after some time.");
             }
-            TempData["msg"] = "<script>alert('Saved Successfully!');</script>";
-            return RedirectToAction("Index");
+            return Json(leaveValidations);
         }
 
-        public async Task<ActionResult> Delete(int Id)
+        public JsonResult GetById(int Id)
         {
-            var leaveValidation = new LeaveValidation();
+            LeaveValidation leaveValidation = null;
             HttpClient client = _api.Initial();
-            HttpResponseMessage res = await client.GetAsync("LeaveValidations/" + Id.ToString());
-            var result = res.Content.ReadAsStringAsync().Result;
-            leaveValidation = JsonConvert.DeserializeObject<LeaveValidation>(result.Substring(1, result.Length - 2));
-            return View(leaveValidation);
-        }
+            var responseTask = client.GetAsync("LeaveValidations/" + Id);
+            responseTask.Wait();
 
-        [HttpPost]
-        public ActionResult DeleteSend(int Id)
-        {
-            HttpClient client = _api.Initial();
-            HttpResponseMessage res = client.DeleteAsync("LeaveValidations/" + Id.ToString()).Result;
-            if (res.Content.ReadAsStringAsync().Result != "True")
+            var result = responseTask.Result;
+            if (result.IsSuccessStatusCode)
             {
-                TempData["msg"] = "<script>alert('Data failed to deleted!');</script>";
+                var json = JsonConvert.DeserializeObject(result.Content.ReadAsStringAsync().Result).ToString();
+                leaveValidation = JsonConvert.DeserializeObject<LeaveValidation>(json);
             }
-            TempData["msg"] = "<script>alert('Data successfully deleted!');</script>";
-            return RedirectToAction("Index");
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Server ERror Try after some time.");
+            }
+            return Json(leaveValidation);
         }
 
-        public ActionResult Report(LeaveValidation leaveValidation)
+        public JsonResult InsertUpdate(LeaveValidation leaveValidation, int Id)
+        {
+            HttpClient client = _api.Initial();
+            var myContent = JsonConvert.SerializeObject(leaveValidation);
+            var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+            var byteContent = new ByteArrayContent(buffer);
+            byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            if (leaveValidation.Id == 0)
+            {
+                try
+                {
+                    var result = client.PostAsync("LeaveValidations", byteContent).Result;
+                    return Json(result);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            else if (leaveValidation.Id == Id)
+            {
+                try
+                {
+                    var result = client.PutAsync("LeaveValidations/" + Id, byteContent).Result;
+                    return Json(result);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return Json(404);
+        }
+
+        public JsonResult Delete(int id)
+        {
+            HttpClient client = _api.Initial();
+            var result = client.DeleteAsync("LeaveValidations/" + id).Result;
+            return Json(result);
+        }
+
+        public async Task<IActionResult> Excel()
         {
             List<LeaveValidation> leaveValidations = new List<LeaveValidation>();
             HttpClient clientView = _api.Initial();
-            HttpResponseMessage resView = clientView.GetAsync("LeaveValidations").Result;
+            HttpResponseMessage resView = await clientView.GetAsync("LeaveValidations");
             var resultView = resView.Content.ReadAsStringAsync().Result;
             leaveValidations = JsonConvert.DeserializeObject<List<LeaveValidation>>(resultView);
 
-            LeaveValsReport leaveValReport = new LeaveValsReport();
-            byte[] abyte = leaveValReport.PrepareReport(leaveValidations);
-            return File(abyte, "application/pdf");
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("LeaveValidations");
+                var currentRow = 1;
+                var number = 0;
+                worksheet.Cell(currentRow, 1).Value = "No";
+                worksheet.Cell(currentRow, 2).Value = "Employee Nip";
+                worksheet.Cell(currentRow, 3).Value = "Employee Name";
+                worksheet.Cell(currentRow, 4).Value = "Leave Duration";
+                worksheet.Cell(currentRow, 5).Value = "Reason";
+                worksheet.Cell(currentRow, 6).Value = "Manager Id";
+                worksheet.Cell(currentRow, 7).Value = "Valid Duration";
+                worksheet.Cell(currentRow, 8).Value = "Manager Action";
+
+                foreach (var leaveVal in leaveValidations)
+                {
+                    currentRow++;
+                    number++;
+                    worksheet.Cell(currentRow, 1).Value = number;
+                    worksheet.Cell(currentRow, 2).Value = leaveVal.Nip;
+                    worksheet.Cell(currentRow, 3).Value = leaveVal.Name;
+                    worksheet.Cell(currentRow, 4).Value = leaveVal.Duration;
+                    worksheet.Cell(currentRow, 5).Value = leaveVal.Reason;
+                    worksheet.Cell(currentRow, 6).Value = leaveVal.ManagerId;
+                    worksheet.Cell(currentRow, 7).Value = leaveVal.ValidDuration;
+                    worksheet.Cell(currentRow, 8).Value = leaveVal.Action;
+
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var conten = stream.ToArray();
+                    return File(conten, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "LeaveValidations_Data.xlsx");
+                }
+            }
         }
+
     }
+      
 }

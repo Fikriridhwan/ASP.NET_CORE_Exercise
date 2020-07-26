@@ -20,15 +20,15 @@ namespace ASP.NET_Core_API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<EmployeeVM> GetEmployees()
+        public async Task<IEnumerable<EmployeeVM>> GetEmployees()
         {
-            return _employeeRepository.GetAll();
+            return await _employeeRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public async Task<IEnumerable<EmployeeVM>> GetEmployees(int Id)
+        public EmployeeVM GetEmployees(int Id)
         {
-            return await _employeeRepository.Get(Id);
+            return _employeeRepository.Get(Id);
         }
 
         [HttpPost]
@@ -62,6 +62,17 @@ namespace ASP.NET_Core_API.Controllers
                 return Ok(delete);
             }
             return BadRequest("Failed to delete data!");
+        }
+
+        [HttpPost("Login")]
+        public IActionResult LoginEmployee(EmployeeVM employee)
+        {
+            int res = _employeeRepository.Login(employee);
+            if (res == 1)
+            {
+                return Ok(res);
+            }
+            return BadRequest("Login failed, username or password not match");
         }
     }
 }

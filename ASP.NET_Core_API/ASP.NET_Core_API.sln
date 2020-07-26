@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET_Core_API", "ASP.NET_Core_API\ASP.NET_Core_API.csproj", "{CA83CA74-D60B-4573-80E0-26725B374BCF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NET_Core_Client", "..\ASP.NET_Core_Client\ASP.NET_Core_Client.csproj", "{601342FF-0ED3-4074-ADCF-449C7B67EA75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET_Core_Client", "..\ASP.NET_Core_Client\ASP.NET_Core_Client.csproj", "{601342FF-0ED3-4074-ADCF-449C7B67EA75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

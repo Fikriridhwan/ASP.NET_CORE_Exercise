@@ -44,23 +44,23 @@ namespace ASP.NET_Core_API.Repository
             }
         }
 
-        public async Task<IEnumerable<LeaveValidationVM>> Get(int Id)
+        public LeaveValidationVM Get(int Id)
         {
             using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("myConn")))
             {
                 var procName = "SP_Get_LeaveValidation";
                 parameters.Add("Id", Id);
-                var getLV = await connection.QueryAsync<LeaveValidationVM>(procName, parameters, commandType: CommandType.StoredProcedure);
+                var getLV = connection.Query<LeaveValidationVM>(procName, parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
                 return getLV;
             }
         }
 
-        public IEnumerable<LeaveValidationVM> GetAll()
+        public async Task<IEnumerable<LeaveValidationVM>> GetAll()
         {
             using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("myConn")))
             {
                 var procName = "SP_GetAll_LeaveValidation";
-                var getAllLV =  connection.Query<LeaveValidationVM>(procName, commandType: CommandType.StoredProcedure);
+                var getAllLV = await connection.QueryAsync<LeaveValidationVM>(procName, commandType: CommandType.StoredProcedure);
                 return getAllLV;
             }
         }

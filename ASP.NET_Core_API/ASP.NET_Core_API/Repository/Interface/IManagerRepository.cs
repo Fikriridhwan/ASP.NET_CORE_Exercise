@@ -8,8 +8,8 @@ namespace ASP.NET_Core_API.Repository.Interface
 {
     public interface IManagerRepository
     {
-        IEnumerable<ManagerVM> GetAll();
-        Task<IEnumerable<ManagerVM>> Get(int Id);
+        Task<IEnumerable<ManagerVM>> GetAll();
+        ManagerVM Get(int Id);
         int Create(ManagerVM managerVM);
         int Update(ManagerVM managerVM, int Id);
         int Delete(int Id);

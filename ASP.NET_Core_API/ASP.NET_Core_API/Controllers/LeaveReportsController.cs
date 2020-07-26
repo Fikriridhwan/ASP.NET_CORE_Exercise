@@ -20,15 +20,15 @@ namespace ASP.NET_Core_API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<LeaveReportVM> GetLeaveReport()
+        public async Task<IEnumerable<LeaveReportVM>> GetLeaveReport()
         {
-            return _leaveReportRepository.GetAll();
+            return await _leaveReportRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public async Task<IEnumerable<LeaveReportVM>> GetLeaveReports(int Id)
+        public LeaveReportVM GetLeaveReports(int Id)
         {
-            return await _leaveReportRepository.Get(Id);
+            return _leaveReportRepository.Get(Id);
         }
 
         [HttpPost]
